@@ -9,6 +9,8 @@ from database import Base, engine, get_ecommerce_db
 import models
 from schema.product import ProductResponse, PaginatedProductResponse
 
+from routers import cart, orderManage, orders, products, reviews, shippingInformation, users, wishlist
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     async with engine.begin() as main_conn:
@@ -18,6 +20,16 @@ async def lifespan(_app: FastAPI):
     await engine.dispose()
 
 app = FastAPI(lifespan=lifespan)
+
+app.include_router(cart.router, prefix='/api/cart', tags=['cart'])
+app.include_router(orderManage.router, prefix='/api/orderManage', tags=['orderManage'])
+app.include_router(orders.router, prefix='/api/orders', tags=['orders'])
+app.include_router(products.router, prefix='/api/products', tags=['products'])
+app.include_router(reviews.router, prefix='/api/reviews', tags=['reviews'])
+app.include_router(shippingInformation.router, prefix='/api/shippingInformation', tags=['shippingInformation'])
+app.include_router(users.router, prefix='/api/users', tags=['users'])
+app.include_router(wishlist.router, prefix='/api/wishlist', tags=['wishlist'])
+
 
 app.get('/', include_in_schema=False)
 async def home(request: Request):
