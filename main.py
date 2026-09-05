@@ -1,12 +1,13 @@
-from fastapi import FastAPI, Request, HTTPException, status, Depends
+from fastapi import FastAPI, Request, HTTPException, status, Depends, Query
 from contextlib import asynccontextmanager
+from typing import Annotated
 
-from datetime import datetime, UTC
-
-from sqlalchemy import select
+from sqlalchemy import select, or_, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import Base, engine, get_ecommerce_db
+import models
+from schema.product import ProductResponse, PaginatedProductResponse
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -22,3 +23,47 @@ app.get('/', include_in_schema=False)
 async def home(request: Request):
     return {'message':'Welcome to Ecommerce-Backend'}
 
+
+app.get('/search?q={search_term}', response_models=PaginatedProductResponse)
+async def search_product(
+    search_term: str,
+    db: Annotated[AsyncSession, Depends(get_ecommerce_db)],
+    skip: Annotated[int, Query(ge=0)] = 0,
+    limit: Annotated[int, Query(ge=1, le=10)] = 10
+):
+    product_count = await db.execute(
+        select(func.count())
+        .select_from(models.Product)
+        .where(
+            or_(
+                models.Product.name.icontains(search_term),
+                models.Product.description.icontains(search_term)
+            )
+        )
+    )
+    total = product_count.scalar() or 0
+    
+    result = await db.execute(
+        select(models.Product)
+        .where(
+            or_(
+                models.Product.name.icontains(search_term),
+                models.Product.description.icontains(search_term)
+            )
+        )
+        .offset(skip)
+        .limit(limit)
+    )
+
+    products = result.scalars().all()
+
+    has_more = skip + len(products) < total
+    return PaginatedProductResponse(
+        products=[ProductResponse.model_validate(product) for product in products],
+        total = total,
+        skip = skip,
+        limit = limit,
+        has_more = has_more
+    )
+
+    

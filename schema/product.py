@@ -16,6 +16,7 @@ class ProductCreate(ProductBase):
 class ProductResponse(ProductBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
+    inStock: bool
     created_at: datetime
     
 class ProductUpdate(BaseModel):
@@ -26,9 +27,8 @@ class ProductUpdate(BaseModel):
     category: str | None = Field(default=None, max_length=50)
     quantity: int | None = Field(default=None)
 
-class ProductStockStatus(BaseModel):
+class ProductStatus(BaseModel):
     inStock: bool 
-
 
 class PaginatedProductResponse(BaseModel):
     products: list[ProductResponse]

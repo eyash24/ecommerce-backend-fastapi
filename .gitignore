@@ -8,3 +8,16 @@ wheels/
 
 # Virtual environments
 .venv
+
+# secret keys and configs
+.env
+
+# uv lock
+*.lock
+
+# databas
+*.db
+
+# test coverage
+.coverage
+.pytest_cache
