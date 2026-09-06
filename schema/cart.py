@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict, Field
-from product import ProductResponse
+from .product import ProductResponse
 from datetime import datetime
 
 class CartBase(BaseModel):

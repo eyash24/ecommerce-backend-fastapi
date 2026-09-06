@@ -87,7 +87,7 @@ async def create_order_manage(
 
 @router.put(
     '/{order_manage_id}',
-    response_models=OrderManageIDResponse
+    response_model=OrderManageIDResponse
 )
 async def update_order_manage_full(
     order_manage_id: int,
@@ -149,7 +149,7 @@ async def update_order_manage_full(
 
 @router.patch(
     '/{order_manage_id}',
-    response_models=OrderManageIDResponse
+    response_model=OrderManageIDResponse
 )
 async def update_order_manage_partial(
     order_manage_id: int,

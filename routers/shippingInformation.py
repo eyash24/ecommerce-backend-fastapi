@@ -26,7 +26,7 @@ router = APIRouter()
 
 @router.get(
     '/{shipping_id}',
-    response_models=ShippingInformationResponse
+    response_model=ShippingInformationResponse
 )
 async def get_shipping_info(
     shipping_id: int,

@@ -91,7 +91,7 @@ async def get_wishlist_product(
     )
 
 
-@router.post('', response_status=status.HTTP_201_CREATED, response_model=WishlistResponse)
+@router.post('', status_code=status.HTTP_201_CREATED, response_model=WishlistResponse)
 async def create_wishlist(
     wishlist_data: WishlistCreate,
     current_user: CurrentUser,

@@ -118,7 +118,7 @@ class Review(Base):
         index=True,
     ) 
     product_id: Mapped[int] = mapped_column(
-        ForeignKey('product.id'),
+        ForeignKey('products.id'),
         nullable=False,
         index=True
     )
@@ -138,7 +138,7 @@ class Wishlist(Base):
         index=True,
     ) 
     product_id: Mapped[int] = mapped_column(
-        ForeignKey('product.id'),
+        ForeignKey('products.id'),
         nullable=False,
         index=True
     )
@@ -192,7 +192,7 @@ class OrderManage(Base):
         default=lambda: datetime.now(UTC),
     )
     shipping_id: Mapped[int] = mapped_column(
-        ForeignKey('shipping_infomation.id'),
+        ForeignKey('shipping_information.id'),
         nullable=False
     )
 

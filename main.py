@@ -21,14 +21,14 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+app.include_router(users.router, prefix='/api/users', tags=['users'])
+app.include_router(products.router, prefix='/api/products', tags=['products'])
+app.include_router(wishlist.router, prefix='/api/wishlist', tags=['wishlist'])
 app.include_router(cart.router, prefix='/api/cart', tags=['cart'])
+app.include_router(reviews.router, prefix='/api/reviews', tags=['reviews'])
 app.include_router(orderManage.router, prefix='/api/orderManage', tags=['orderManage'])
 app.include_router(orders.router, prefix='/api/orders', tags=['orders'])
-app.include_router(products.router, prefix='/api/products', tags=['products'])
-app.include_router(reviews.router, prefix='/api/reviews', tags=['reviews'])
 app.include_router(shippingInformation.router, prefix='/api/shippingInformation', tags=['shippingInformation'])
-app.include_router(users.router, prefix='/api/users', tags=['users'])
-app.include_router(wishlist.router, prefix='/api/wishlist', tags=['wishlist'])
 
 
 app.get('/', include_in_schema=False)
@@ -36,7 +36,7 @@ async def home(request: Request):
     return {'message':'Welcome to Ecommerce-Backend'}
 
 
-app.get('/search?q={search_term}', response_models=PaginatedProductResponse)
+app.get('/search?q={search_term}', response_model=PaginatedProductResponse)
 async def search_product(
     search_term: str,
     db: Annotated[AsyncSession, Depends(get_ecommerce_db)],
