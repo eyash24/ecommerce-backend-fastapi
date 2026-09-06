@@ -23,7 +23,7 @@ class OrderManageIDResponse(OrderManageBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
     created_at: datetime
-    user_id: int
+    # user_id: int
 
 # order 
 class OrderBase(BaseModel):
@@ -39,6 +39,6 @@ class OrderUpdate(BaseModel):
 class OrderIDResponse(OrderBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
-    user_id: int
+    # user_id: int
     order_manage_id: int
 

@@ -137,8 +137,8 @@ async def update_order(
 
     order.quantity = order_data.quantity
 
-    db.commit()
-    db.refresh(order)
+    await db.commit()
+    await db.refresh(order)
     return order
 
 @router.delete('/{order_manage_id}/{order_id}', status_code=status.HTTP_204_NO_CONTENT)

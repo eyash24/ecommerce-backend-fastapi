@@ -319,6 +319,14 @@ async def get_product_reviews(
     print(reviews)
 
     has_more = skip + len(reviews) < total
+    print(
+        f"product={product_id}, "
+        f"skip={skip}, "
+        f"limit={limit}, "
+        f"total={total}, "
+        f"returned={len(reviews)}, "
+        f"has_more={has_more}"
+    )
 
     return PaginatedReviewResponse(
         reviews=[ReviewResponse.model_validate(review) for review in reviews],
