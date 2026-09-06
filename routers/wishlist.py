@@ -105,7 +105,7 @@ async def create_wishlist(
         )
     )
 
-    wishlist = result.scalar().first()
+    wishlist = result.scalars().first()
 
     if wishlist:
         return wishlist

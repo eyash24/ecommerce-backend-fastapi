@@ -31,12 +31,12 @@ app.include_router(orders.router, prefix='/api/orders', tags=['orders'])
 app.include_router(shippingInformation.router, prefix='/api/shippingInformation', tags=['shippingInformation'])
 
 
-app.get('/', include_in_schema=False)
+@app.get('/', include_in_schema=False)
 async def home(request: Request):
     return {'message':'Welcome to Ecommerce-Backend'}
 
 
-app.get('/search?q={search_term}', response_model=PaginatedProductResponse)
+@app.get('/search/{search_term}', response_model=PaginatedProductResponse)
 async def search_product(
     search_term: str,
     db: Annotated[AsyncSession, Depends(get_ecommerce_db)],
@@ -77,5 +77,3 @@ async def search_product(
         limit = limit,
         has_more = has_more
     )
-
-    

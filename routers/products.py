@@ -8,7 +8,7 @@ from fastapi import (
     status
 )
 
-from sqlalchemy import select, func
+from sqlalchemy import select, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import models
@@ -47,6 +47,38 @@ async def get_product_id(
         )
 
     return product_info
+
+@router.get(
+    '/all/proc',
+    response_model=PaginatedProductResponse
+)
+async def get_products_all(
+    db: Annotated[AsyncSession, Depends(get_ecommerce_db)],
+    skip: Annotated[int, Query(ge=0)] = 0,
+    limit: Annotated[int, Query(ge=1,le=100)] = 10
+):
+    product_count = await db.execute(
+        select(func.count())
+        .select_from(models.Product)
+    )
+    total = product_count.scalar() or 0
+    
+    result = await db.execute(
+        select(models.Product)
+        .offset(skip)
+        .limit(limit)
+    )
+
+    products = result.scalars().all()
+
+    has_more = skip + len(products) < total
+    return PaginatedProductResponse(
+        products=[ProductResponse.model_validate(product) for product in products],
+        total = total,
+        skip = skip,
+        limit = limit,
+        has_more = has_more
+    )
 
 
 @router.post(
@@ -180,7 +212,7 @@ async def delete_product(
 
 
 @router.get(
-    '/category?c={category}',
+    '/category/{category}',
     response_model=PaginatedProductResponse
 )
 async def get_product_category(
@@ -215,7 +247,7 @@ async def get_product_category(
     )
 
 @router.get(
-    '/instock?p={product_id}',
+    '/instock/{product_id}',
     response_model=ProductStatus
 )
 async def get_product_status(
@@ -258,15 +290,15 @@ async def get_product_reviews(
     total = review_count.scalar() or 0
 
     result = await db.execute(
-        select(func.count())
-        .select_from(models.Review)
+        select(models.Review)
         .where(models.Review.product_id == product_id)
         .order_by(models.Review.created_at.desc())
         .offset(skip)
         .limit(limit)
     )
 
-    reviews = result.scalars().all()
+    reviews = result.scalars().all() or []
+    print(reviews)
 
     has_more = skip + len(reviews) < total
 
@@ -277,3 +309,4 @@ async def get_product_reviews(
         limit = limit,
         has_more = has_more
     )
+

@@ -46,7 +46,8 @@ class User(Base):
     )
 
     shipping_address: Mapped[list[ShipingInformation]] = relationship(
-        back_populates='user'
+        back_populates='user',
+        cascade='all, delete-orphan'
     )
 
 
@@ -93,7 +94,7 @@ class Product(Base):
     )
 
     review : Mapped[list[Review]] = relationship(
-        back_populates='products',
+        back_populates='product',
         cascade='all, delete-orphan'
     )
 
@@ -197,7 +198,7 @@ class OrderManage(Base):
     )
 
     user : Mapped[User] = relationship(back_populates='orders')
-    shipping: Mapped[ShipingInformation] = relationship(back_populates='order_manage', cascade='all, delete-orphan')
+    shipping: Mapped[ShipingInformation] = relationship(back_populates='order_manage')
 
 class Order(Base):
     __tablename__ = 'orders'

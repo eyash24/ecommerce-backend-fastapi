@@ -7,6 +7,7 @@ class UserBase(BaseModel):
       
 class UserCreate(UserBase):
     password: str = Field(min_length=8)
+    image_url: str = Field(min_length=5, max_length=200)
 
 class UserPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)

@@ -141,8 +141,8 @@ async def update_order(
     db.refresh(order)
     return order
 
-@router.patch('/{order_manage_id}/{order_id}', status_code=status.HTTP_204_NO_CONTENT)
-async def update_order(
+@router.delete('/{order_manage_id}/{order_id}', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_order(
     order_manage_id: int,
     order_id: int,
     current_user: CurrentUser,

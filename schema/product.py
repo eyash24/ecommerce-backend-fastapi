@@ -7,7 +7,6 @@ class ProductBase(BaseModel):
     price: float 
     image_url: str = Field(max_length=200)
     category: str = Field(max_length=50)
-    owner_id: int
     quantity: int
 
 class ProductCreate(ProductBase):
@@ -18,6 +17,7 @@ class ProductResponse(ProductBase):
     id: int
     inStock: bool
     created_at: datetime
+    user_id: int
     
 class ProductUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=2, max_length=50)
