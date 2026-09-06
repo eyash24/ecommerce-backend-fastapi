@@ -36,3 +36,6 @@ class PaginatedProductResponse(BaseModel):
     skip: int
     limit: int
     has_more: bool
+
+class ProductCategoryResponse(BaseModel):
+    categories: list[str]

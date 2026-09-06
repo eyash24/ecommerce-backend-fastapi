@@ -18,7 +18,8 @@ from schema.product import (
     ProductCreate,
     ProductStatus,
     ProductUpdate,
-    PaginatedProductResponse
+    PaginatedProductResponse,
+    ProductCategoryResponse
 )
 from schema.review import PaginatedReviewResponse, ReviewResponse
 
@@ -79,6 +80,23 @@ async def get_products_all(
         limit = limit,
         has_more = has_more
     )
+
+@router.get(
+    '/all/categories',
+    response_model=ProductCategoryResponse
+)
+async def get_product_category_list(
+    db: Annotated[AsyncSession, Depends(get_ecommerce_db)]
+):
+    result = await db.execute(
+        select(models.Product.category).distinct()
+    )
+    category_list = result.scalars().all() or []
+
+    return ProductCategoryResponse(
+        categories=category_list
+    )
+
 
 
 @router.post(

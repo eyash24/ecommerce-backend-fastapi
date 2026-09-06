@@ -4,12 +4,14 @@ from typing import Annotated
 
 from sqlalchemy import select, or_, func
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.middleware.cors import CORSMiddleware
 
 from database import Base, engine, get_ecommerce_db
 import models
 from schema.product import ProductResponse, PaginatedProductResponse
 
 from routers import cart, orderManage, orders, products, reviews, shippingInformation, users, wishlist
+
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -77,3 +79,13 @@ async def search_product(
         limit = limit,
         has_more = has_more
     )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:4200",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
